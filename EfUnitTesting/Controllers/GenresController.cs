@@ -1,5 +1,6 @@
 using EfUnitTesting.Data;
 using EfUnitTesting.Models;
+using EfUnitTesting.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,18 +10,18 @@ namespace EfUnitTesting.Controllers;
 [Route("[controller]")]
 public class GenresController : Controller
 {
-    private readonly MoviesContext _context;
+    private readonly IGenreRepository _repository;
 
-    public GenresController(MoviesContext context)
+    public GenresController(IGenreRepository repository)
     {
-        _context = context;
+        _repository = repository;
     }
-    
+
     [HttpGet]
-    [ProducesResponseType(typeof(List<Genre>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<Genre>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _context.Genres.ToListAsync());
+        return Ok(await _repository.GetAll());
     }
 
     [HttpGet("{id:int}")]
@@ -28,56 +29,41 @@ public class GenresController : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get([FromRoute] int id)
     {
-        var genre = await _context.Genres.FindAsync(id);
-        //var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Id == id);
-        
+        var genre = await _repository.Get(id);
+
         return genre == null
             ? NotFound()
             : Ok(genre);
     }
-    
+
     [HttpPost]
     [ProducesResponseType(typeof(Genre), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] Genre genre)
     {
-        await _context.Genres.AddAsync(genre);
-        
-        await _context.SaveChangesAsync();
+        var createdGenre = await _repository.Create(genre);
 
-        return CreatedAtAction(nameof(Get), new { id = genre.Id }, genre);
+        return CreatedAtAction(nameof(Get), new { id = createdGenre.Id }, createdGenre);
     }
-    
+
     [HttpPut("{id:int}")]
     [ProducesResponseType(typeof(Genre), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] Genre genre)
     {
-        var existingGenre = await _context.Genres.FindAsync(id);
+        var updatedGenre = await _repository.Update(id, genre);
 
-        if (existingGenre is null)
-            return NotFound();
-
-        existingGenre.Name = genre.Name;
-
-        await _context.SaveChangesAsync();
-
-        return Ok(existingGenre);
+        return updatedGenre is null
+            ? NotFound()
+            : Ok(updatedGenre);
     }
-    
+
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Remove([FromRoute] int id)
     {
-        var existingGenre = await _context.Genres.FindAsync(id);
+        var success = await _repository.Delete(id);
 
-        if (existingGenre is null)
-            return NotFound();
-
-        _context.Genres.Remove(existingGenre);
-
-        await _context.SaveChangesAsync();
-
-        return Ok();
+        return success ? Ok() : NotFound();
     }
 }

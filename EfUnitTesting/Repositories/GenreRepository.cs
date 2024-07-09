@@ -27,6 +27,10 @@ public class GenreRepository : IGenreRepository
     {
         await _context.Genres.AddAsync(genre);
 
+        _context.Entry(genre)
+            .Property<string?>("TenantId")
+            .CurrentValue = _context.TenantId;
+
         await _context.SaveChangesAsync();
 
         return genre;

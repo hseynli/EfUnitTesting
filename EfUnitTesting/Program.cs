@@ -1,4 +1,6 @@
+using Dometrain.EFCore.Tenants.QueryFilter.Tenants;
 using EfUnitTesting.Data;
+using EfUnitTesting.QueryFilter.Tenants;
 using EfUnitTesting.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,9 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(setup => 
+{
+    setup.OperationFilter<TenantHeaderSwaggerAttribute>();
+});
 
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IGenreRepository, GenreRepository>();
+builder.Services.AddScoped<TenantService>();
 
 builder.Services.AddDbContext<MoviesContext>(opt =>
 {

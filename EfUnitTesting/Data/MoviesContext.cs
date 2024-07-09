@@ -1,3 +1,4 @@
+using Dometrain.EFCore.Tenants.QueryFilter.Tenants;
 using EfUnitTesting.Data.EntityMapping;
 using EfUnitTesting.Models;
 using Microsoft.EntityFrameworkCore;
@@ -6,11 +7,16 @@ namespace EfUnitTesting.Data;
 
 public class MoviesContext : DbContext
 {
+    private readonly TenantService _tenantService;
+    public string? TenantId => _tenantService.GetTenantId();
+
     public MoviesContext() { }
 
-    public MoviesContext(DbContextOptions<MoviesContext> options)
+    public MoviesContext(DbContextOptions<MoviesContext> options, TenantService tenant)
         :base(options)
-    { }
+    {
+        _tenantService = tenant;
+    }
     
     public DbSet<Genre> Genres => Set<Genre>();
 
@@ -21,6 +27,6 @@ public class MoviesContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new GenreMapping());
+        modelBuilder.ApplyConfiguration(new GenreMapping(this));
     }
 }
