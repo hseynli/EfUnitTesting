@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfUnitTesting", "EfUnitTesting\EfUnitTesting.csproj", "{771768C8-5B90-4CE5-9A64-4A401424C39C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfUnitTesting.Tests", "EfUnitTesting.Tests\EfUnitTesting.Tests.csproj", "{F36C7F01-BEB4-4ABE-80AB-8DCD2C534665}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solutions Items", "Solutions Items", "{5063EB5E-3427-446F-BBF2-C5ECDCB52AC4}"
+	ProjectSection(SolutionItems) = preProject
+		dotnet-counters.txt = dotnet-counters.txt
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{771768C8-5B90-4CE5-9A64-4A401424C39C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{771768C8-5B90-4CE5-9A64-4A401424C39C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{771768C8-5B90-4CE5-9A64-4A401424C39C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{771768C8-5B90-4CE5-9A64-4A401424C39C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F36C7F01-BEB4-4ABE-80AB-8DCD2C534665}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F36C7F01-BEB4-4ABE-80AB-8DCD2C534665}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F36C7F01-BEB4-4ABE-80AB-8DCD2C534665}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F36C7F01-BEB4-4ABE-80AB-8DCD2C534665}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9645198C-ED72-42D7-B906-2A78D4D06526}
+	EndGlobalSection
+EndGlobal

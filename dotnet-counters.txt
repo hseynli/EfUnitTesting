@@ -1,0 +1,12 @@
+//install dotnet-counters
+
+dotnet tool install --global dotnet-counters
+
+//get all current application running proccesses
+dotnet counters ps
+
+//run counters
+dotnet-counters monitor Microsoft.EntityFrameworkCore -p 5696 (For example API project process id)
+
+//run all active counters
+//dotnet counters monitor -p 4444
