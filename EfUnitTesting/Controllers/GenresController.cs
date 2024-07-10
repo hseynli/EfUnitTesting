@@ -1,6 +1,7 @@
 using EfUnitTesting.Data;
 using EfUnitTesting.Models;
 using EfUnitTesting.Repositories;
+using EfUnitTesting.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +12,12 @@ namespace EfUnitTesting.Controllers;
 public class GenresController : Controller
 {
     private readonly IGenreRepository _repository;
+    private readonly IBatchGenreService _batchService;
 
-    public GenresController(IGenreRepository repository)
+    public GenresController(IGenreRepository repository, IBatchGenreService batchService)
     {
         _repository = repository;
+        _batchService = batchService;
     }
 
     [HttpGet]
@@ -43,6 +46,15 @@ public class GenresController : Controller
         var createdGenre = await _repository.Create(genre);
 
         return CreatedAtAction(nameof(Get), new { id = createdGenre.Id }, createdGenre);
+    }
+
+    [HttpPost("batch")]
+    [ProducesResponseType(typeof(IEnumerable<Genre>), StatusCodes.Status201Created)]
+    public async Task<IActionResult> CreateAll([FromBody] List<Genre> genres)
+    {
+        var response = await _batchService.CreateGenres(genres);
+
+        return CreatedAtAction(nameof(GetAll), new { }, response);
     }
 
     [HttpPut("{id:int}")]

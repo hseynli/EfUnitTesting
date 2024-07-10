@@ -1,4 +1,5 @@
 using EfUnitTesting.Data;
+using EfUnitTesting.Data.UnitOfWork;
 using EfUnitTesting.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,10 +8,12 @@ namespace EfUnitTesting.Repositories;
 public class GenreRepository : IGenreRepository
 {
     private readonly MoviesContext _context;
+    private readonly IUnitOfWorkManager _uowManager;
 
-    public GenreRepository(MoviesContext context)
+    public GenreRepository(MoviesContext context, IUnitOfWorkManager uowManager)
     {
         _context = context;
+        _uowManager = uowManager;
     }
 
     public async Task<IEnumerable<Genre>> GetAll()
@@ -31,7 +34,8 @@ public class GenreRepository : IGenreRepository
             .Property<string?>("TenantId")
             .CurrentValue = _context.TenantId;
 
-        await _context.SaveChangesAsync();
+        if (!_uowManager.IsUnitOfWorkStarted)
+            await _context.SaveChangesAsync();
 
         return genre;
     }
@@ -45,7 +49,8 @@ public class GenreRepository : IGenreRepository
 
         existingGenre.Name = genre.Name;
 
-        await _context.SaveChangesAsync();
+        if (!_uowManager.IsUnitOfWorkStarted)
+            await _context.SaveChangesAsync();
 
         return existingGenre;
     }
@@ -59,7 +64,30 @@ public class GenreRepository : IGenreRepository
 
         _context.Genres.Remove(existingGenre);
 
-        await _context.SaveChangesAsync();
+        if (!_uowManager.IsUnitOfWorkStarted)
+            await _context.SaveChangesAsync();
+
         return true;
+    }
+
+    public async Task<IEnumerable<Genre>> GetAllFromQuery()
+    {
+        var minimumGenreId = 2;
+
+        var genres = await _context.Genres
+            .FromSql($"SELECT * FROM [dbo].[Genres] WHERE ID >= {minimumGenreId}")
+            .Where(genre => genre.Name != "Comedy")
+            .ToListAsync();
+
+        return genres;
+    }
+
+    public async Task<IEnumerable<GenreName>> GetNames()
+    {
+        var names = await _context.Database
+            .SqlQuery<GenreName>($"SELECT Name FROM dbo.Genres")
+            .ToListAsync();
+
+        return names;
     }
 }

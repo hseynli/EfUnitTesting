@@ -9,4 +9,6 @@ public interface IGenreRepository
     Task<Genre> Create(Genre genre);
     Task<Genre?> Update(int id, Genre genre);
     Task<bool> Delete(int id);
+    Task<IEnumerable<Genre>> GetAllFromQuery();
+    Task<IEnumerable<GenreName>> GetNames();
 }
