@@ -1,14 +1,18 @@
-using Dometrain.EFCore.Tenants.QueryFilter.Tenants;
 using EfUnitTesting.Data;
 using EfUnitTesting.Data.UnitOfWork;
 using EfUnitTesting.QueryFilter.Tenants;
 using EfUnitTesting.Repositories;
 using EfUnitTesting.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(setup => 
 {

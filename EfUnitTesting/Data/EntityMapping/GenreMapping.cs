@@ -16,5 +16,11 @@ public class GenreMapping : TenantAwareMapping<Genre>
         builder.Property<DateTime>("CreatedDate")
             .HasColumnName("CreatedAt")
             .HasValueGenerator<CreatedDateGenerator>();
+
+        builder.Property<bool>("Deleted")
+            .HasDefaultValue(false);
+
+        builder.HasQueryFilter(p => EF.Property<bool>(p, "Deleted") == false)
+            .HasAlternateKey(p => p.Name);
     }
 }

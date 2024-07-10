@@ -1,4 +1,4 @@
-namespace Dometrain.EFCore.Tenants.QueryFilter.Tenants;
+namespace EfUnitTesting.QueryFilter.Tenants;
 
 /// <summary>
 /// This could get the tenant from anywhere (token, database, ...).

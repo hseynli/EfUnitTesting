@@ -34,9 +34,7 @@ public class GenresController : Controller
     {
         var genre = await _repository.Get(id);
 
-        return genre == null
-            ? NotFound()
-            : Ok(genre);
+        return genre == null ? NotFound() : Ok(genre);
     }
 
     [HttpPost]

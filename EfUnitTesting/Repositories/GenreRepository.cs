@@ -21,10 +21,10 @@ public class GenreRepository : IGenreRepository
         return await _context.Genres.ToListAsync();
     }
 
-    public async Task<Genre?> Get(int id)
-    {
-        return await _context.Genres.FindAsync(id);
-    }
+    private static readonly Func<MoviesContext, int, Genre?> CompiledQuery = EF.CompileQuery((MoviesContext context, int genreId) =>
+                                            context.Genres.FirstOrDefault(genre => genre.Id == genreId));
+
+    public async Task<Genre?> Get(int id) => await Task.FromResult(CompiledQuery(_context, id));
 
     public async Task<Genre> Create(Genre genre)
     {
